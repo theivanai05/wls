@@ -126,12 +126,17 @@ USER_Stream_Reco = Stream_recommended[!streams_view_by_user, on=c("deck_id","mas
 #Recommendation Based on the Country & User: 
 USER_Stream_Reco = merge(USER_Stream_Reco , Country_User_M,by = c("masked_user_id","country")) 
 
-USER_Qns_Reco = setcolorder(USER_Qns_Reco, c("country","masked_user_id", "question_id", "prediction"))
-USER_Stream_Reco = setcolorder(USER_Stream_Reco, c("country","masked_user_id", "deck_id", "prediction"))
+USER_Qns_Reco = unique(setcolorder(USER_Qns_Reco, c("country","masked_user_id", "question_id", "prediction")))
+USER_Stream_Reco = unique(setcolorder(USER_Stream_Reco, c("country","masked_user_id", "deck_id", "prediction")))
 
 #removeing the qtags columns 
 USER_Qns_Reco [,c("qtags")] <- NULL
 USER_Stream_Reco [,c("qtags")] <- NULL
+
+#Making the Recommendations Unique again : 
+USER_Qns_Reco  = unique(USER_Qns_Reco)
+USER_Stream_Reco = unique(USER_Stream_Reco)
+
 
 #Setting WD for saving the values for recommendation GUI
   # setwd("~/Documents/NUS_EBAC")
@@ -140,7 +145,7 @@ USER_Stream_Reco [,c("qtags")] <- NULL
   # write.csv(USER_Qns_Reco,"Data/UpSkill_Question_Recommendation.csv")
 
 #Removing all of the unwanted DTs : 
-rm(dfs,df2s,df3s,df4s,df,df2,df3,df4)  
+rm(dfs,df2s,df3s,df4s,df,df2,df3,df4) 
 
 #Fields for the Streams : 
 #country, masked_user_id , deck_id , prediction
