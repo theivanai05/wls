@@ -71,8 +71,8 @@
   USER_Stream_Reco %>% filter(masked_user_id %in% Demo_Users)
   test_pred_V2 %>% filter(userid %in% Demo_Users)
   
-  saveRDS(USER_Stream_Reco,file = "UpSkill_Stream_Recommendation.RData")
-  saveRDS(USER_Qns_Reco,file = "UpSkill_Question_Recommendation.RData")
+  saveRDS(USER_Stream_Reco,file = "UpSkill_Stream_Recommendation.RDS")
+  saveRDS(USER_Qns_Reco,file = "UpSkill_Question_Recommendation.RDS")
   
   # Saving working directory to Local Directory 
     # setwd("~/Documents/NUS_EBAC")   -- To Uncomment when saving the Rdata Source
