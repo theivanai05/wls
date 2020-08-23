@@ -60,8 +60,24 @@
   # Churning out the question and streams to be recommended 
   source("Code/upskill_qns_deck_reco.R")
   
+  # Demo Users FOR GUI 
+  Demo_Users = c("97d0a65c","b1459d23","c80bffb2","c930cc66","f10f490e","f810564e")
   
+  # setting WD back to Project Data Location 
+  setwd("~/wls/Data")
   
+  ## Checking if the Users exists 
+  USER_Qns_Reco %>% filter(masked_user_id %in% Demo_Users)
+  USER_Stream_Reco %>% filter(masked_user_id %in% Demo_Users)
+  test_pred_V2 %>% filter(userid %in% Demo_Users)
+  
+  saveRDS(USER_Stream_Reco,file = "UpSkill_Stream_Recommendation.RData")
+  saveRDS(USER_Qns_Reco,file = "UpSkill_Question_Recommendation.RData")
+  
+  # Saving working directory to Local Directory 
+    # setwd("~/Documents/NUS_EBAC")   -- To Uncomment when saving the Rdata Source
+    # save.image("Data/WLS_22082020_V2.RData")
+    # load("Data/WLS_22082020_V2.RData")
   
   
   

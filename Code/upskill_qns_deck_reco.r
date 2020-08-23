@@ -3,7 +3,7 @@
 #Input from Recosystem_V2.r 
 #colnames(test)
 #[1] "userid" "qtag" "pulsescore" "prediction" "MAE"   
-test_pred_V2 = test  %>% filter(test$userid == "002c7b9d") 
+test_pred_V2 = test  #%>% filter(test$userid == "002c7b9d") 
 
 #####3) Understanding the Master Users 
 #Country_User_M = unique(master_dt[,c("country","masked_user_id")])
@@ -23,24 +23,26 @@ tag_recommend  = test_pred_V2 %>% filter(test_pred_V2$prediction <= '0.99')
 #Given the Tags Recommended; Pull out the questions for the tags
 ## Pulling out Deck IDs for the Corresponding TAGS recommended.   
 
-#### Left Join using merge function
-df = merge(x=C_Q_TAG_SER,y=tag_recommend,by.x="question_tags.1",by.y="qtag" )
-df = df[,c("question_tags.1","question_id","country","prediction","userid")] 
-
+#### Left Join using merge function by Tags and USERID 
+df = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","userid"))
+df = df[,c("question_tags.1","question_id","country","prediction","masked_user_id")] 
 # Rename column names
 names(df)[names(df) == "question_tags.1"] <- "qtags"
 
-
-df2 = merge(x=C_Q_TAG_SER,y=tag_recommend,by.x="question_tags.2",by.y="qtag" )
-df2 = df2[,c("question_tags.2","question_id","country","prediction","userid")]
-
+df2 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","userid"))
+df2 = df2[,c("question_tags.2","question_id","country","prediction","masked_user_id")]
 names(df2)[names(df2) == "question_tags.2"] <- "qtags"
 
-#this is the set of questions recommended for a particular User for a set of 6 Tags... 
-#???? ### Yet to Do ### ???? Iterations across all users is yet to be done ???? ### Yet to Do ### ????
-qns_recommended = data.table(rbind(df,df2))
-qns_recommended = data.table(qns_recommended)
+df3 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","userid"))
+df3 = df3[,c("question_tags.3","question_id","country","prediction","masked_user_id")]
+names(df3)[names(df3) == "question_tags.3"] <- "qtags"
 
+df4 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","userid"))
+df4 = df4[,c("question_tags.4","question_id","country","prediction","masked_user_id")]
+names(df4)[names(df4) == "question_tags.4"] <- "qtags"
+
+#this is the set of questions recommended for a particular User for a set of 4 Tags... 
+qns_recommended = data.table(rbind(df,df2,df3,df4))
 
 ## For the TAGS, Need to pick up Questions ANswered Wrongly or Not answered yet 
 ## Input Required What has the User ANswered and Wrongly Answered  -- DONE 
@@ -51,8 +53,9 @@ qns_recommended = data.table(qns_recommended)
 # ==> Pass1 : Questions not yet answered 
 #u_q_t_M %>% filter( masked_user_id == "002c7b9d" & qns_ans == 0)
 # ==> Pass2 : Questions already answered
-qns_answered_by_user = u_q_t_M %>% filter( masked_user_id == "002c7b9d" & qns_ans == 1)
-qns_answered_by_user = data.table(qns_answered_by_user[,c("masked_user_id","question_id")])
+qns_answered_by_users = u_q_t_M %>% filter( qns_ans == 1)
+#qns_answered_by_user = u_q_t_M %>% filter( masked_user_id == "002c7b9d" & qns_ans == 1)
+qns_answered_by_users = data.table(qns_answered_by_users[,c("masked_user_id","question_id")])
 #    masked_user_id question_id no_of_trials points_earned qns_ans
 
 # ==> Rate of Questions answered to not answered 
@@ -60,7 +63,7 @@ qns_answered_by_user = data.table(qns_answered_by_user[,c("masked_user_id","ques
 
 
 #Final User unanswered list of questions 
-USER_Qns_Reco = qns_recommended[!qns_answered_by_user, on="question_id"]   
+USER_Qns_Reco = qns_recommended[!qns_answered_by_users, on=c("masked_user_id","question_id")]   
 
 #Users' Country of residence... 
 #Country_User_M %>% filter( Country_User_M$masked_user_id == "002c7b9d")
@@ -82,40 +85,64 @@ USER_Qns_Reco = merge(USER_Qns_Reco, Country_User_M,by = c("masked_user_id","cou
 # ==> Pass1 : STREAMS not yet Viewed 
 #u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 0)
 # ==> Pass2 : STREAMS already completed
-streams_view_by_user = u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 1)
-streams_view_by_user = data.table(streams_view_by_user [,"deck_id"])
+streams_view_by_user = u_d_a_M %>% filter( completed == 1)
+#streams_view_by_user = u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 1)
+streams_view_by_user = data.table(streams_view_by_user [,c("masked_user_id","deck_id")])
 
-## Pulling out Deck IDs for the Corresponding TAGS recommended.   
-sel.col <- c("question_tags.1","question_tags.2","question_tags.3","question_tags.4")
-out.col <- c("deck_id","country","masked_user_id")
+## Pulling out Deck IDs for the Corresponding TAGS recommended. Using another Method, this does not filter by Users..
+  # sel.col <- c("question_tags.1","question_tags.2","question_tags.3","question_tags.4")
+  # out.col <- c("deck_id","country","masked_user_id")
+  # # DeckIds- Streams : for Tags Recommended  
+  # stream_recommended = views_sear_tags_dt[views_sear_tags_dt[, Reduce(`|`, lapply(.SD, `%in%`, unlist(tag_recommend[,c("qtag")]))),.SDcols = sel.col],..out.col]
+  # stream_recommended = unique(stream_recommended)
+  #rm(stream_recommended)
 
-# DeckIds- Streams : for Tags Recommended  
-stream_recommended = views_sear_tags_dt[views_sear_tags_dt[, Reduce(`|`, lapply(.SD, `%in%`, tag_recommend[,c("qtag")])),.SDcols = sel.col],..out.col]
-stream_recommended = unique(stream_recommended)
+
+#### Left Join using merge function by Tags and USERID 
+dfs = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","userid"))
+dfs = dfs[,c("question_tags.1","deck_id","country","prediction","masked_user_id")] 
+names(dfs)[names(dfs) == "question_tags.1"] <- "qtags" # Rename column names
+
+df2s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","userid"))
+df2s = df2s[,c("question_tags.2","deck_id","country","prediction","masked_user_id")]
+names(df2s)[names(df2s) == "question_tags.2"] <- "qtags"
+
+df3s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","userid"))
+df3s = df3s[,c("question_tags.3","deck_id","country","prediction","masked_user_id")]
+names(df3s)[names(df3s) == "question_tags.3"] <- "qtags"
+
+df4s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","userid"))
+df4s = df4s[,c("question_tags.4","deck_id","country","prediction","masked_user_id")]
+names(df4s)[names(df4s) == "question_tags.4"] <- "qtags"
+
+#this is the set of questions recommended for a particular User for a set of 4 Tags... 
+Stream_recommended = data.table(rbind(dfs,df2s,df3s,df4s))
 
 #Final User Unviewed list of STREAMS 
-## ?? Yet to Do ?? ##
-USER_Stream_Reco = stream_recommended[!streams_view_by_user, on="deck_id"]  
+USER_Stream_Reco = Stream_recommended[!streams_view_by_user, on=c("deck_id","masked_user_id")]  
 
 # ==> Streams Data : 
-#View(views_sear_tags_uniq_dt)
-#View(tag_recommend) 
 
-#Users' Country of residence... 
-#userid_country_M %>% filter( masked_user_id == "002c7b9d")
+#Recommendation Based on the Country & User: 
+USER_Stream_Reco = merge(USER_Stream_Reco , Country_User_M,by = c("masked_user_id","country")) 
 
-#Recommendation Based on the Country for a Single User: 
-#USER_Stream_Reco = USER_Stream_Reco %>% filter(country %in% "IN") %>% unique()
-USER_Stream_Reco = merge(USER_Stream_Reco , Country_User_M,by = c("country")) 
+USER_Qns_Reco = setcolorder(USER_Qns_Reco, c("country","masked_user_id", "question_id", "prediction"))
+USER_Stream_Reco = setcolorder(USER_Stream_Reco, c("country","masked_user_id", "deck_id", "prediction"))
 
+#removeing the qtags columns 
+USER_Qns_Reco [,c("qtags")] <- NULL
+USER_Stream_Reco [,c("qtags")] <- NULL
 
-USER_Qns_Reco = setcolorder(USER_Qns_Reco, c("country", "question_id", "qtags"))
-USER_Stream_Reco = setcolorder(USER_Stream_Reco, c("country", "deck_id"))
+#Setting WD for saving the values for recommendation GUI
+  # setwd("~/Documents/NUS_EBAC")
+  # 
+  # write.csv(USER_Stream_Reco,"Data/UpSkill_Stream_Recommendation.csv")
+  # write.csv(USER_Qns_Reco,"Data/UpSkill_Question_Recommendation.csv")
 
-write.csv(USER_Stream_Reco,"Data/UpSkill_Stream_Recommendation.csv")
-write.csv(USER_Qns_Reco,"Data/UpSkill_Question_Recommendation.csv")
+#Removing all of the unwanted DTs : 
+rm(dfs,df2s,df3s,df4s,df,df2,df3,df4)  
 
 #Fields for the Streams : 
-#country, masked_user_id , deck_id , predicted
+#country, masked_user_id , deck_id , prediction
 #Fields for the questions : 
-#country, masked_user_id , question_id , predicted
+#country, masked_user_id , question_id , prediction
