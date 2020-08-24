@@ -24,20 +24,20 @@ tag_recommend  = test_pred_V2 %>% filter(test_pred_V2$prediction <= '0.99')
 ## Pulling out Deck IDs for the Corresponding TAGS recommended.   
 
 #### Left Join using merge function by Tags and USERID 
-df = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","userid"))
+df = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df = df[,c("question_tags.1","question_id","country","prediction","masked_user_id")] 
 # Rename column names
 names(df)[names(df) == "question_tags.1"] <- "qtags"
 
-df2 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","userid"))
+df2 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df2 = df2[,c("question_tags.2","question_id","country","prediction","masked_user_id")]
 names(df2)[names(df2) == "question_tags.2"] <- "qtags"
 
-df3 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","userid"))
+df3 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df3 = df3[,c("question_tags.3","question_id","country","prediction","masked_user_id")]
 names(df3)[names(df3) == "question_tags.3"] <- "qtags"
 
-df4 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","userid"))
+df4 = merge(x=assess_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df4 = df4[,c("question_tags.4","question_id","country","prediction","masked_user_id")]
 names(df4)[names(df4) == "question_tags.4"] <- "qtags"
 
@@ -99,19 +99,19 @@ streams_view_by_user = data.table(streams_view_by_user [,c("masked_user_id","dec
 
 
 #### Left Join using merge function by Tags and USERID 
-dfs = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","userid"))
+dfs = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.1","masked_user_id"),by.y=c("qtag","masked_user_id"))
 dfs = dfs[,c("question_tags.1","deck_id","country","prediction","masked_user_id")] 
 names(dfs)[names(dfs) == "question_tags.1"] <- "qtags" # Rename column names
 
-df2s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","userid"))
+df2s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.2","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df2s = df2s[,c("question_tags.2","deck_id","country","prediction","masked_user_id")]
 names(df2s)[names(df2s) == "question_tags.2"] <- "qtags"
 
-df3s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","userid"))
+df3s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.3","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df3s = df3s[,c("question_tags.3","deck_id","country","prediction","masked_user_id")]
 names(df3s)[names(df3s) == "question_tags.3"] <- "qtags"
 
-df4s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","userid"))
+df4s = merge(x=views_sear_tags_dt,y=tag_recommend,by.x=c("question_tags.4","masked_user_id"),by.y=c("qtag","masked_user_id"))
 df4s = df4s[,c("question_tags.4","deck_id","country","prediction","masked_user_id")]
 names(df4s)[names(df4s) == "question_tags.4"] <- "qtags"
 

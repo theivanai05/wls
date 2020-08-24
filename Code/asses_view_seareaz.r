@@ -68,7 +68,7 @@ stream_data5 = data.table()
 for ( c in cntry_lst){
   stream_data5 = rbind(stream_data5,cbind(CountryDeck_M[CountryDeck_M$country == c,],C_TAG_SER_4_VIEWDATA[C_TAG_SER_4_VIEWDATA$country == c,c("question_tags.1","question_tags.2","question_tags.3","question_tags.4")])
   )}
-rm(stream_data5)
+
 
 #4) Merging with the views_dt
 #rm(views_sear_tags_dt)
@@ -93,4 +93,6 @@ assess_sear_tags_dt = unique(assess_sear_tags_dt)
   names <- c('masked_user_id' ,'qtag')
   pulsescore_Master[,names] <- lapply(pulsescore_Master[,..names] , factor)
   #str(pulsescore_Master)
+  
+  rm(stream_data5)
 
