@@ -1,4 +1,7 @@
 
+##==> Create a table with More fields for MF. 
+#1) u_q_t_MS vs u_d_a_M
+
 ### Start of Tag Recommendation based on Pulse  Scores ###
 smp_size = floor(0.8 * nrow(pulsescore_Master))
 train_ind = sample(1:nrow(pulsescore_Master),size = smp_size)

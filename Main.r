@@ -69,6 +69,9 @@
   # Churning out the question and streams to be recommended 
   source("Code/upskill_qns_deck_reco.R")
   
+  # Output analysis 
+  #source("Code/op_analysis.r") ## !!** to be uncommendted later on if required. 
+  
   # Demo Users FOR GUI 
   Demo_Users = c("97d0a65c","b1459d23","c80bffb2","c930cc66","f10f490e","f810564e")
   
@@ -77,9 +80,10 @@
   setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data")
   
   ## Checking if the Users exists 
-  USER_Qns_Reco %>% filter(masked_user_id %in% Demo_Users)
-  USER_Stream_Reco %>% filter(masked_user_id %in% Demo_Users)
-  test_pred_V2 %>% filter(masked_user_id  %in% Demo_Users)
+        USER_Qns_Reco %>% filter(masked_user_id %in% Demo_Users)
+        # #By Users ==> No Output 
+        USER_Stream_Reco %>% filter(masked_user_id %in% Demo_Users)
+
   
   saveRDS(USER_Stream_Reco,file = "UpSkill_Stream_Recommendation.RDS")
   saveRDS(USER_Qns_Reco,file = "UpSkill_Question_Recommendation.RDS")
