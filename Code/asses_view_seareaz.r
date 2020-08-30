@@ -84,15 +84,6 @@ assess_sear_tags_dt = merge(assess_dt,C_Q_TAG_SER[,c("country","question_id","qu
 views_sear_tags_dt = unique(views_sear_tags_dt)
 assess_sear_tags_dt = unique(assess_sear_tags_dt)
 
-# User Pulse Code Evaluation & factorization of Userid and qtags
-#Making Changes to the Pulse Score File  #129643
-  pulsescore_Master = pulsescore_Master[,c("userid","qtag","pulsescore")]
-  names(pulsescore_Master)[names(pulsescore_Master) == "userid"] <- "masked_user_id" ## Changed field name 
-  pulsescore_Master = unique(pulsescore_Master[complete.cases(pulsescore_Master)==TRUE,])
-  
-  names <- c('masked_user_id' ,'qtag')
-  pulsescore_Master[,names] <- lapply(pulsescore_Master[,..names] , factor)
-  #str(pulsescore_Master)
-  
-  rm(stream_data5)
+#Removing Stream Data 5 that was used in the Searealization Evaluation 
+rm(stream_data5)
 
