@@ -11,7 +11,9 @@
 # ==> Converting pulsescore_Master_GB into a real rating matrix
 pulsescore_Master_GB[,c("X")] <- NULL
 temp <- as(pulsescore_Master_GB,"realRatingMatrix")
-temp
+
+## THe Matrix is a Very Very Sparse Matrix  to go and use it as part of UBCF or IBCF; Using Random and Popular might be the best bet  
+temp_matrix = as(temp,"matrix")
 
 train <- temp[1:100]
 rec <- Recommender(train, method = "UBCF")
@@ -28,6 +30,9 @@ rec_libmf
 
 rec_rnd <- Recommender(train, method = "RANDOM")
 rec_rnd
+
+rec_pop <- Recommender(train, method = "POPULAR")
+rec_pop
 
 #Create top-N recommendations for new users (users 101 and 102)
 
@@ -61,8 +66,24 @@ as(pre_libmf, "list")
 
 pre_rnd <- predict(rec_rnd, temp[201:202], n = 10)
 pre_rnd
+
+
+pre_rnd_ratings <- predict(rec_rnd, temp[201:202], type = "ratings")
+pre_rnd_ratings
+as(pre_rnd_ratings, "matrix")[,1:235]
 #Recommendations as ‘topNList’ with n = 10 for 2 users. 
 as(pre_rnd, "list")
+
+
+## Predictions for the popular Tags 
+pre_pop<- predict(rec_pop, temp[201:202], n = 10)
+pre_pop
+
+pre_pop_ratings <- predict(rec_pop, temp[201:202], type = "ratings")
+pre_pop_ratings
+as(pre_pop_ratings, "matrix")[,1:235]
+#Recommendations as ‘topNList’ with n = 10 for 2 users. 
+as(pre_pop, "list")
 
 
 
@@ -82,3 +103,6 @@ setwd("~/Documents/NUS_EBAC")
 # unlink("Recommended_Recolabs_Tags.RDS") # deleted the file 
 saveRDS(Recommended_Recolabs_Tag,file = "Recommended_Recolabs_Tag.RDS")
 #Recommended_Recolabs_Tag["22f08364"]
+
+
+

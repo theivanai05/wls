@@ -99,3 +99,7 @@ setorder(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id,question_id,-q
     Streams_Recommended_w_views_GB_Users = filter(Streams_Recommended_w_views, country == "GB")
     setorder(Streams_Recommended_w_views_GB_Users, masked_user_id,deck_id,-completed)
     
+    
+    #finding Qns and Streams Recommended for Users 
+    filter(Streams_Recommended_w_views_GB_Users, masked_user_id == "019d90f6")
+    filter(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id == "019d90f6")
